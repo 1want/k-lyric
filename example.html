@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <style>
+    ul {
+      height: 300px;
+      overflow-y: scroll;
+      background: #000;
+    }
+    span {
+      background: rgba(255, 255, 255)
+        linear-gradient(
+          to right,
+          rgba(141, 211, 29, 0.76) 100%,
+          rgb(0, 0, 0) 0%
+        )
+        no-repeat 0 0;
+      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text;
+      background-size: 0% 100%;
+    }
+
+    @keyframes scan {
+      from {
+        background-size: 0% 100%;
+      }
+      to {
+        background-size: 100% 100%;
+      }
+    }
+  </style>
+
+  <script type="module">
+    import { krc } from './lyric.js'
+    import createLyric from './index.js'
+    const url =
+      'http://m801.music.126.net/20220705182956/0cdbb3e903ece22063dcb5fb89ddb33b/jdymusic/obj/wo3DlMOGwrbDjj7DisKw/14096633884/16e7/0af8/1cb3/a464012f4919a44a24bd64332c925fb9.mp3'
+
+    const Ul = document.getElementsByTagName('ul')[0]
+
+    window.onload = () => {
+      const lyric = createLyric(krc, 'krc')
+      const audio = document.getElementsByTagName('audio')[0]
+      // audio.src = url
+      for (var i of lyric) {
+        const li = document.createElement('li')
+        for (var j of i.lyric) {
+          const span = document.createElement('span')
+
+          span.innerText = j
+          li.append(span)
+        }
+        console.log(i)
+        Ul.append(li)
+      }
+    }
+  </script>
+
+  <body>
+    <audio src="" controls></audio>
+    <ul></ul>
+  </body>
+</html>
