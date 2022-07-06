@@ -6,46 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
   </head>
+  <link rel="stylesheet" href="./src/css/index.css" />
 
-  <style>
-    ul {
-      height: 300px;
-      overflow-y: scroll;
-      background: #000;
-    }
-    span {
-      background: rgba(255, 255, 255)
-        linear-gradient(
-          to right,
-          rgba(141, 211, 29, 0.76) 100%,
-          rgb(0, 0, 0) 0%
-        )
-        no-repeat 0 0;
-      -webkit-text-fill-color: transparent;
-      -webkit-background-clip: text;
-      background-size: 0% 100%;
-    }
-
-    .currentSpan {
-      animation: scan linear;
-      background-size: 100% 100%;
-    }
-
-    @keyframes scan {
-      from {
-        background-size: 0% 100%;
-      }
-      to {
-        background-size: 100% 100%;
-      }
-    }
-  </style>
+  <body>
+    <audio src="./src/assets/music.mp3" controls></audio>
+    <ul></ul>
+  </body>
 
   <script type="module">
-    import { krc } from './lyric.js'
-    import createLyric from './index.js'
-    // const url =
-    //   'http://m801.music.126.net/20220705203243/d3cdd0a8c746d9268f459e05cf4f0454/jdymusic/obj/wo3DlMOGwrbDjj7DisKw/14096633884/16e7/0af8/1cb3/a464012f4919a44a24bd64332c925fb9.mp3'
+    import { krc } from './src/js/lyric.js'
+    import createLyric from './src/js/index.js'
 
     const Ul = document.getElementsByTagName('ul')[0]
 
@@ -57,9 +27,11 @@
       })
     }
     window.onload = () => {
+      let playStatus = true
+
       const lyric = createLyric(krc, 'krc')
       const audio = document.getElementsByTagName('audio')[0]
-      // audio.src = url
+
       for (var i of lyric) {
         const li = document.createElement('li')
         for (var j of i.lyric) {
@@ -71,9 +43,12 @@
         Ul.append(li)
       }
 
-      // console.log(lyric)
+      audio.addEventListener('pause', function () {
+        playStatus = false
+      })
 
       audio.addEventListener('timeupdate', function (e) {
+        playStatus = true
         let target = Math.floor(e.target.currentTime)
         const s = document.getElementsByTagName('span')
         const li = document.getElementsByTagName('li')
@@ -84,12 +59,15 @@
             let t = Math.floor(item.time.slice(1, end) / 1000)
             let spanI = 0
 
+            // (target < t && t < target + 0.6) || t < target - 0.6
             if (t == target) {
               function addStyle() {
-                li[index].childNodes[spanI].className = 'currentSpan'
-                li[index].childNodes[spanI].style.animationDuration =
-                  item.time2[spanI] / 1000 + 's'
-                spanI++
+                if (playStatus) {
+                  li[index].childNodes[spanI].className = 'currentSpan'
+                  li[index].childNodes[spanI].style.animationDuration =
+                    item.time2[spanI] / 1000 + 's'
+                  spanI++
+                }
               }
 
               async function addSleep() {
@@ -111,9 +89,4 @@
       })
     }
   </script>
-
-  <body>
-    <audio src="./music.mp3" controls></audio>
-    <ul></ul>
-  </body>
 </html>

@@ -1,0 +1,27 @@
+ul {
+  height: 300px;
+  overflow-y: scroll;
+  background: #000;
+}
+span {
+  background: rgba(255, 255, 255)
+    linear-gradient(to right, rgba(141, 211, 29, 0.76) 100%, rgb(0, 0, 0) 0%)
+    no-repeat 0 0;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  background-size: 0% 100%;
+}
+
+.currentSpan {
+  animation: scan linear;
+  background-size: 100% 100%;
+}
+
+@keyframes scan {
+  from {
+    background-size: 0% 100%;
+  }
+  to {
+    background-size: 100% 100%;
+  }
+}

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button onclick="playAudio(buffer)">btn</button>
+    <button onclick="pause()">pause</button>
+  </body>
+  <script>
+    const URL = 'music.mp3'
+    var buffer = ''
+    const audioContext = new AudioContext()
+    const playAudio = function (buffer) {
+      const source = audioContext.createBufferSource()
+      source.buffer = buffer
+      source.connect(audioContext.destination)
+      source.start()
+      requestAnimationFrame(outputTimestamps)
+    }
+
+    const pause = () => {
+      audioContext.suspend()
+    }
+    function outputTimestamps() {
+      let ts = audioContext.getOutputTimestamp()
+      console.log(
+        'Context time: ' +
+          ts.contextTime +
+          ' | Performance time: ' +
+          ts.performanceTime
+      )
+      rAF = requestAnimationFrame(outputTimestamps)
+    }
+
+    audioContext.addEventListener('play', function () {
+      console.log('ok')
+    })
+    const getBuffer = function (url) {
+      const request = new XMLHttpRequest()
+      return new Promise((resolve, reject) => {
+        request.open('GET', url, true)
+        request.responseType = 'arraybuffer'
+        request.onload = () => {
+          audioContext.decodeAudioData(request.response, buffer =>
+            buffer ? resolve(buffer) : reject('decoding error')
+          )
+        }
+        request.onerror = error => reject(error)
+        request.send()
+      })
+    }
+    getBuffer(URL).then(res => {
+      buffer = res
+    })
+  </script>
+</html>
