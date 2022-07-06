@@ -8,85 +8,16 @@
   </head>
   <link rel="stylesheet" href="./src/css/index.css" />
 
-  <body>
-    <audio src="./src/assets/music.mp3" controls></audio>
-    <ul></ul>
-  </body>
-
   <script type="module">
     import { krc } from './src/js/lyric.js'
     import createLyric from './src/js/index.js'
+    const audio = document.getElementsByTagName('audio')[0]
 
-    const Ul = document.getElementsByTagName('ul')[0]
-
-    const sleep = delay => {
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          return resolve()
-        }, delay)
-      })
-    }
-    window.onload = () => {
-      let playStatus = true
-
-      const lyric = createLyric(krc, 'krc')
-      const audio = document.getElementsByTagName('audio')[0]
-
-      for (var i of lyric) {
-        const li = document.createElement('li')
-        for (var j of i.lyric) {
-          const span = document.createElement('span')
-
-          span.innerText = j
-          li.append(span)
-        }
-        Ul.append(li)
-      }
-
-      audio.addEventListener('pause', function () {
-        playStatus = false
-      })
-
-      audio.addEventListener('timeupdate', function (e) {
-        playStatus = true
-        let target = Math.floor(e.target.currentTime)
-        const s = document.getElementsByTagName('span')
-        const li = document.getElementsByTagName('li')
-
-        function startPlay() {
-          lyric.find((item, index) => {
-            let end = item.time.indexOf(',')
-            let t = Math.floor(item.time.slice(1, end) / 1000)
-            let spanI = 0
-
-            // (target < t && t < target + 0.6) || t < target - 0.6
-            if (t == target) {
-              function addStyle() {
-                if (playStatus) {
-                  li[index].childNodes[spanI].className = 'currentSpan'
-                  li[index].childNodes[spanI].style.animationDuration =
-                    item.time2[spanI] / 1000 + 's'
-                  spanI++
-                }
-              }
-
-              async function addSleep() {
-                addStyle()
-                await sleep(item.time2[spanI])
-
-                if (spanI < item.time2.length) {
-                  addSleep()
-                } else {
-                  startPlay()
-                }
-              }
-
-              addSleep()
-            }
-          })
-        }
-        startPlay()
-      })
-    }
+    const { play, pause } = new createLyric(krc, audio)
   </script>
+  <body>
+    <button onclick="play()">play</button>
+    <button onclick="pause()">pause</button>
+    <audio src="./src/assets/music.mp3"></audio>
+  </body>
 </html>
