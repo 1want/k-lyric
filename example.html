@@ -26,6 +26,11 @@
       background-size: 0% 100%;
     }
 
+    .currentSpan {
+      animation: scan linear;
+      background-size: 100% 100%;
+    }
+
     @keyframes scan {
       from {
         background-size: 0% 100%;
@@ -39,11 +44,18 @@
   <script type="module">
     import { krc } from './lyric.js'
     import createLyric from './index.js'
-    const url =
-      'http://m801.music.126.net/20220705182956/0cdbb3e903ece22063dcb5fb89ddb33b/jdymusic/obj/wo3DlMOGwrbDjj7DisKw/14096633884/16e7/0af8/1cb3/a464012f4919a44a24bd64332c925fb9.mp3'
+    // const url =
+    //   'http://m801.music.126.net/20220705203243/d3cdd0a8c746d9268f459e05cf4f0454/jdymusic/obj/wo3DlMOGwrbDjj7DisKw/14096633884/16e7/0af8/1cb3/a464012f4919a44a24bd64332c925fb9.mp3'
 
     const Ul = document.getElementsByTagName('ul')[0]
 
+    const sleep = delay => {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          return resolve()
+        }, delay)
+      })
+    }
     window.onload = () => {
       const lyric = createLyric(krc, 'krc')
       const audio = document.getElementsByTagName('audio')[0]
@@ -56,14 +68,52 @@
           span.innerText = j
           li.append(span)
         }
-        console.log(i)
         Ul.append(li)
       }
+
+      // console.log(lyric)
+
+      audio.addEventListener('timeupdate', function (e) {
+        let target = Math.floor(e.target.currentTime)
+        const s = document.getElementsByTagName('span')
+        const li = document.getElementsByTagName('li')
+
+        function startPlay() {
+          lyric.find((item, index) => {
+            let end = item.time.indexOf(',')
+            let t = Math.floor(item.time.slice(1, end) / 1000)
+            let spanI = 0
+
+            if (t == target) {
+              function addStyle() {
+                li[index].childNodes[spanI].className = 'currentSpan'
+                li[index].childNodes[spanI].style.animationDuration =
+                  item.time2[spanI] / 1000 + 's'
+                spanI++
+              }
+
+              async function addSleep() {
+                addStyle()
+                await sleep(item.time2[spanI])
+
+                if (spanI < item.time2.length) {
+                  addSleep()
+                } else {
+                  startPlay()
+                }
+              }
+
+              addSleep()
+            }
+          })
+        }
+        startPlay()
+      })
     }
   </script>
 
   <body>
-    <audio src="" controls></audio>
+    <audio src="./music.mp3" controls></audio>
     <ul></ul>
   </body>
 </html>
