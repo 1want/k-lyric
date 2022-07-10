@@ -1,7 +1,2 @@
 // src/main.js
-import { num } from './foo.js'
-function fn() {
-  console.log(num)
-}
-
-fn()
+export { createLyric } from 'src/js/index.js'

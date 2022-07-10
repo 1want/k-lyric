@@ -9,12 +9,16 @@
   <link rel="stylesheet" href="./src/css/index.css" />
 
   <script type="module">
+    import { createLyric } from './dist/bundle.js'
+    console.log(createLyric)
+  </script>
+  <!-- <script type="module">
     import { krc } from './src/js/lyric.js'
     import createLyric from './src/js/index.js'
     const audio = document.getElementsByTagName('audio')[0]
 
     const { play, pause } = new createLyric(krc, audio)
-  </script>
+  </script> -->
   <body>
     <button onclick="play()">play</button>
     <button onclick="pause()">pause</button>
