@@ -78,9 +78,7 @@ function createLyric(lyric, audio) {
 
 const sleep = delay => {
   return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      return resolve()
-    }, delay)
+    setTimeout(resolve, delay)
   })
 }
 
