@@ -9,8 +9,11 @@
   <link rel="stylesheet" href="./src/css/index.css" />
 
   <script type="module">
-    import { createLyric } from './dist/bundle.js'
+    import createLyric from './src/js/index.js'
+    import { krc } from './src/js/lyric.js'
     console.log(createLyric)
+    const audio = document.getElementsByTagName('audio')[0]
+    createLyric(krc, audio)
   </script>
   <!-- <script type="module">
     import { krc } from './src/js/lyric.js'
@@ -20,8 +23,8 @@
     const { play, pause } = new createLyric(krc, audio)
   </script> -->
   <body>
-    <button onclick="play()">play</button>
-    <button onclick="pause()">pause</button>
-    <audio src="./src/assets/music.mp3"></audio>
+    <!-- <button onclick="play()">play</button>
+    <button onclick="pause()">pause</button> -->
+    <audio src="./src/assets/music.mp3" controls></audio>
   </body>
 </html>
