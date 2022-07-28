@@ -1,8 +1,7 @@
+//每个字渲染完之后需要sleep当前字的时间，然后判断递归渲染下一个字还是下一行
+
 import parseLyric from './parseLyric.js'
 
-//每句歌词的最后一句完了之后下一句有可能并不是马上开始，中间会有间隔，需要处理这个间隔
-// 1. 可以重新添加一个setTimeout
-// 2. 可以通过下一句的开始时间减去上一句的结束时间的差值来sleep
 function drawLyric(lyric) {
   const body = document.getElementsByTagName('body')[0]
   const Ul = document.createElement('ul')
@@ -56,7 +55,7 @@ function createLyric(lyric, audio) {
 }
 
 const sleep = delay => {
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     setTimeout(resolve, delay)
   })
 }
