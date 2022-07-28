@@ -22,7 +22,6 @@ function drawLyric(lyric) {
 
 function createLyric(lyric, audio) {
   const lyrics = parseLyric(lyric)
-  console.log(lyrics)
   drawLyric(lyrics)
 
   const li = document.getElementsByTagName('li')
@@ -30,13 +29,6 @@ function createLyric(lyric, audio) {
     let spanI = 0
     let index = 0
     let item = null
-    let oldTime = index =>
-      new Function('return ' + lyrics[index - 1].time)().reduce(
-        (a, b) => a + b,
-        0
-      )
-
-    let startTime = index => new Function('return ' + lyrics[index].time)()[0]
     function addStyle() {
       item = lyrics[index]
       li[index].childNodes[spanI].className = 'currentSpan'
@@ -48,16 +40,12 @@ function createLyric(lyric, audio) {
       addStyle()
       await sleep(item.time2[spanI])
       spanI++
-
       if (spanI < item.time2.length) {
-        console.log('ok')
         addSleep()
       } else {
         index++
         spanI = 0
-        // await sleep(startTime(index))
         addSleep()
-        // console.log(startTime(index) - oldTime(index), oldTime(index))
       }
     }
 
