@@ -12,9 +12,13 @@
     import createLyric from '../src/js/index.js'
     import { krc } from './lyric.js'
     const audio = document.getElementsByTagName('audio')[0]
-    createLyric(krc, audio)
+    const { play, pause } = createLyric(krc, audio)
+    document.getElementsByTagName('button')[0].addEventListener('click', play)
+    document.getElementsByTagName('button')[1].addEventListener('click', pause)
   </script>
   <body>
     <audio src="./music.mp3" controls></audio>
+    <button>play</button>
+    <button>pause</button>
   </body>
 </html>
