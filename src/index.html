@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>kLyric</title>
+  </head>
+  <link rel="stylesheet" href="./index.css" />
+
+  <script type="module">
+    import createLyric from './js/index.js'
+    import { krc } from './js/lyric.js'
+    const audio = document.getElementsByTagName('audio')[0]
+    const { play, pause } = createLyric(krc, audio)
+    document.getElementsByTagName('button')[0].addEventListener('click', play)
+    document.getElementsByTagName('button')[1].addEventListener('click', pause)
+  </script>
+  <body>
+    <audio src="./music.mp3"></audio>
+    <button>play</button>
+    <button>pause</button>
+  </body>
+</html>
