@@ -1,7 +1,18 @@
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
 ul {
-  height: 300px;
-  overflow-y: scroll;
   background: #000;
+  width: 100vw;
+  height: 100vh;
+  text-align: center;
+  margin: 0;
+  padding: 20px 0;
+}
+li {
+  list-style: none;
 }
 span {
   background: rgba(255, 255, 255)
@@ -10,11 +21,34 @@ span {
   -webkit-text-fill-color: transparent;
   -webkit-background-clip: text;
   background-size: 0% 100%;
+  color: red;
 }
 
 .currentSpan {
   animation: scan linear;
   background-size: 100% 100%;
+}
+
+.btn {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+button {
+  margin: 0 20px;
+  width: 100px;
+  height: 38px;
+  line-height: 38px;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  display: none;
+}
+
+.show-btn {
+  display: block;
 }
 
 @keyframes scan {
