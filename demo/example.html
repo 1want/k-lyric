@@ -13,12 +13,32 @@
     import { krc } from './lyric.js'
     const audio = document.getElementsByTagName('audio')[0]
     const { play, pause } = createLyric(krc, audio)
-    document.getElementsByTagName('button')[0].addEventListener('click', play)
-    document.getElementsByTagName('button')[1].addEventListener('click', pause)
+    const btn1 = document.getElementsByTagName('button')[0]
+    const btn2 = document.getElementsByTagName('button')[1]
+
+    btn1.addEventListener('click', play)
+    btn2.addEventListener('click', pause)
   </script>
   <body>
     <audio src="./music.mp3"></audio>
-    <button>play</button>
-    <button>pause</button>
+    <div class="btn">
+      <button class="show-btn" onclick="addCss('play')">play</button>
+      <button onclick="addCss('pause')">pause</button>
+    </div>
   </body>
+
+  <script>
+    const btn1 = document.getElementsByTagName('button')[0]
+    const btn2 = document.getElementsByTagName('button')[1]
+
+    function addCss(state) {
+      if (state === 'play') {
+        btn1.className = ''
+        btn2.className = 'show-btn'
+      } else {
+        btn2.className = ''
+        btn1.className = 'show-btn'
+      }
+    }
+  </script>
 </html>

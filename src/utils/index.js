@@ -13,6 +13,7 @@ export const drawLyric = lyric => {
       const span = document.createElement('span')
 
       span.innerText = j
+      // span.style.color = 'red'
       li.append(span)
     }
     Ul.append(li)
