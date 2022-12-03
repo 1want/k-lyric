@@ -13,7 +13,7 @@ function createLyric(lyric, audio) {
 
   drawLyric(lyrics)
 
-  function addStyle() {
+  const addStyle = () => {
     if (playState === false) return
     item = lyrics[index]
     li[index].childNodes[spanI].className = 'currentSpan'
@@ -21,7 +21,7 @@ function createLyric(lyric, audio) {
     time = item.time2[spanI] / 1000
     li[index].childNodes[spanI].style.animationDuration = time + 's'
   }
-  async function addSleep() {
+  const addSleep = async () => {
     if (playState === false) return
     addStyle()
     await sleep(item.time2[spanI])
@@ -42,9 +42,6 @@ function createLyric(lyric, audio) {
     playState = true
 
     if (spanI >= 0) {
-      // li[index].childNodes[
-      //   spanI - 1 < 0 ? 0 : spanI - 1
-      // ].style.animationPlayState = 'running'
       li[index].childNodes.forEach(item => {
         item.style.animationPlayState = 'running'
       })
@@ -53,7 +50,6 @@ function createLyric(lyric, audio) {
           item.style.animationPlayState = 'running'
         })
       }
-      // li[index].childNodes[spanI].style.animationPlayState = 'running'
     }
 
     if (16650 - playTime * 1000 > 0) {
@@ -79,7 +75,6 @@ function createLyric(lyric, audio) {
 
       if (cTime >= startTime && cTime <= endTime) {
         index = ind
-        console.log(cTime, item, index, spanI)
         for (var i = 0; i < item.time2.length; i++) {
           if (cTime - startTime - item.time2[i] > item.time2[i]) {
             cTime = cTime - item.time2[i]
