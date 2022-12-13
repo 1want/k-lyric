@@ -37,7 +37,6 @@ function analyzeLyrics(lyric) {
 
 function parseLyric(lyric, type) {
   return analyzeLyrics(lyric)
-  console.log(lyrics)
 }
 
 export default parseLyric

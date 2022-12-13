@@ -6,10 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>kLyric</title>
   </head>
-  <link rel="stylesheet" href="./index.css" />
+  <link preload rel="stylesheet" href="./css/index.css" />
+  <link preload rel="stylesheet" href="./css/reset.css" />
 
   <script type="module">
-    import createLyric from '../src/js/index.js'
+    import createLyric from './js/index.js'
     import { krc } from './lyric.js'
     const audio = document.getElementsByTagName('audio')[0]
     const { play, pause } = createLyric(krc, audio)

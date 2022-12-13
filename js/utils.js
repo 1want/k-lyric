@@ -11,9 +11,7 @@ export const drawLyric = lyric => {
     const li = document.createElement('li')
     for (var j of i.lyric) {
       const span = document.createElement('span')
-
       span.innerText = j
-      // span.style.color = 'red'
       li.append(span)
     }
     Ul.append(li)

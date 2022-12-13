@@ -1,4 +1,4 @@
-import { sleep, drawLyric } from '../utils/index.js'
+import { sleep, drawLyric } from './utils.js'
 import parseLyric from './parseLyric.js'
 
 function createLyric(lyric, audio) {

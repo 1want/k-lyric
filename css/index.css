@@ -11,9 +11,6 @@ ul {
   margin: 0;
   padding: 20px 0;
 }
-li {
-  list-style: none;
-}
 span {
   background: rgba(255, 255, 255)
     linear-gradient(to right, rgba(141, 211, 29, 0.76) 100%, rgb(0, 0, 0) 0%)
