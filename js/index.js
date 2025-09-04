@@ -1,91 +1,80 @@
-import { sleep, drawLyric } from './utils.js'
+import { drawLyric } from './utils.js'
 import parseLyric from './parseLyric.js'
 
 function createLyric(lyric, audio) {
   const lyrics = parseLyric(lyric)
-  let spanI = 0
-  let index = 0
-  let playState = false
-  let playTime = 0
-  let item = null
-  let setTimer = null
-  const li = document.getElementsByTagName('li')
-
   drawLyric(lyrics)
 
-  const addStyle = () => {
-    if (playState === false) return
-    item = lyrics[index]
-    li[index].childNodes[spanI].className = 'currentSpan'
-    let time = null
-    time = item.time2[spanI] / 1000
-    li[index].childNodes[spanI].style.animationDuration = time + 's'
+  const liElements = document.getElementsByTagName('li')
+  let animationFrameId = null
+  let currentLineIndex = -1
+
+  function findCurrentLineIndex(time) {
+    const msTime = time * 1000
+    return lyrics.findIndex(line => msTime >= line.startTime && msTime <= line.endTime)
   }
-  const addSleep = async () => {
-    if (playState === false) return
-    addStyle()
-    await sleep(item.time2[spanI])
-    spanI++
-    if (spanI < item.time2.length) {
-      addSleep()
-    } else {
-      index++
-      spanI = 0
-      addSleep()
+
+  function update() {
+    const currentTime = audio.currentTime
+    const newIndex = findCurrentLineIndex(currentTime)
+
+    if (newIndex !== currentLineIndex) {
+      // 清除上一行的样式
+      if (currentLineIndex !== -1 && liElements[currentLineIndex]) {
+        liElements[currentLineIndex].classList.remove('current-line')
+        liElements[currentLineIndex].childNodes.forEach(span => {
+          span.className = ''
+          span.style.animation = ''
+        })
+      }
+      // 设置当前行
+      if (newIndex !== -1) {
+        liElements[newIndex].classList.add('current-line')
+        currentLineIndex = newIndex
+      } else {
+        currentLineIndex = -1
+      }
     }
+
+    if (currentLineIndex !== -1) {
+      const currentLine = lyrics[currentLineIndex]
+      const timeIntoLine = currentTime * 1000 - currentLine.startTime
+
+      let accumulatedTime = 0
+      currentLine.words.forEach((word, wordIndex) => {
+        const span = liElements[currentLineIndex].childNodes[wordIndex]
+        if (timeIntoLine >= accumulatedTime && timeIntoLine < accumulatedTime + word.duration) {
+          if (span.className !== 'current-span') {
+            span.className = 'current-span'
+            span.style.animation = `gradient ${word.duration / 1000}s linear forwards`
+          }
+        } else if (timeIntoLine >= accumulatedTime + word.duration) {
+          span.className = 'past-span'
+          span.style.animation = ''
+        } else {
+          span.className = ''
+          span.style.animation = ''
+        }
+        accumulatedTime += word.duration
+      })
+    }
+
+    animationFrameId = requestAnimationFrame(update)
   }
 
   const play = () => {
-    //  暂停音乐时,spanI可能已经到了下一个字体，导致即将要渲染的字无法正确渲染
-    // 所以需要给当前字和上一个字都加上running
     audio.play()
-    playState = true
-
-    if (spanI >= 0) {
-      li[index].childNodes.forEach(item => {
-        item.style.animationPlayState = 'running'
-      })
-      if (index > 1) {
-        li[index - 1].childNodes.forEach(item => {
-          item.style.animationPlayState = 'running'
-        })
-      }
-    }
-
-    if (16650 - playTime * 1000 > 0) {
-      setTimer = setTimeout(() => {
-        addSleep()
-      }, 16650 - playTime * 1000)
-    } else {
-      addSleep()
+    if (!animationFrameId) {
+      update()
     }
   }
-  const pause = () => {
-    // 频繁点击暂停时，会导致字体渲染偏移量增加
-    playState = false
-    audio.pause()
-    li[index].childNodes[spanI].style.animationPlayState = 'paused'
-    clearTimeout(setTimer)
-    playTime = audio.currentTime
-    lyrics.find((item, ind) => {
-      let cTime = playTime * 1000
-      let iTime = new Function('return ' + item.time)()
-      let startTime = iTime[0]
-      let endTime = iTime[0] + iTime[1]
 
-      if (cTime >= startTime && cTime <= endTime) {
-        index = ind
-        for (var i = 0; i < item.time2.length; i++) {
-          if (cTime - startTime - item.time2[i] > item.time2[i]) {
-            cTime = cTime - item.time2[i]
-          } else {
-            // 可能因为时间太短导致判断时直接跳过了某一个字
-            spanI = i + 1
-            return
-          }
-        }
-      }
-    })
+  const pause = () => {
+    audio.pause()
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId)
+      animationFrameId = null
+    }
   }
 
   return {

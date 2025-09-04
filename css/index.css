@@ -2,35 +2,52 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
+  background: #000; /* 将背景移到 body */
+  color: #fff; /* 设置默认文字颜色 */
 }
 ul {
-  background: #000;
-  width: 100vw;
-  height: 100vh;
   text-align: center;
   margin: 0;
-  padding: 20px 0;
+  list-style: none; /* 移除列表默认样式 */
+}
+
+li {
+  padding: 3px 0;
+  font-size: 14px;
+  transition: all 0.3s; /* 为行切换添加平滑过渡 */
+  opacity: 0.5;
+}
+
+li.current-line {
+  transform: scale(1.1); /* 放大当前行 */
+  opacity: 1;
 }
 span {
-  background: rgba(255, 255, 255)
-    linear-gradient(to right, rgba(141, 211, 29, 0.76) 100%, rgb(0, 0, 0) 0%)
-    no-repeat 0 0;
-  -webkit-text-fill-color: transparent;
+  /* 默认状态，未播放的字 */
+  color: #fff;
+}
+
+.past-span {
+  /* 已播放过的字 */
+  color: #8dd31d; /* 设置为高亮色 */
+}
+
+.current-span {
+  /* 正在播放的字，通过动画实现渐变填充 */
+  background: linear-gradient(to right, #8dd31d, #8dd31d) no-repeat, linear-gradient(to right, #fff, #fff) no-repeat;
+  /* 对应设置两个背景的尺寸，绿色背景由动画控制，白色背景始终铺满 */
+  background-size: 0% 100%, 100% 100%;
   -webkit-background-clip: text;
-  background-size: 0% 100%;
-  color: red;
+  background-clip: text;
+  color: transparent;
+  animation-fill-mode: forwards; /* 动画结束后保持最后状态 */
 }
-
-.currentSpan {
-  animation: scan linear;
-  background-size: 100% 100%;
-}
-
 .btn {
   position: absolute;
   bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
+  z-index: 1;
 }
 
 button {
@@ -41,18 +58,19 @@ button {
   border: none;
   border-radius: 2px;
   cursor: pointer;
-  display: none;
 }
 
 .show-btn {
   display: block;
 }
 
-@keyframes scan {
+@keyframes gradient {
   from {
-    background-size: 0% 100%;
+    /* 明确指定两个背景的尺寸：绿色背景从0%开始，白色背景始终为100% */
+    background-size: 0% 100%, 100% 100%;
   }
   to {
-    background-size: 100% 100%;
+    /* 明确指定两个背景的尺寸：绿色背景到100%结束，白色背景始终为100% */
+    background-size: 100% 100%, 100% 100%;
   }
 }
