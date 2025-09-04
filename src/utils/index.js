@@ -6,17 +6,19 @@ export const sleep = delay => {
 
 export const drawLyric = lyric => {
   const body = document.getElementsByTagName('body')[0]
-  const Ul = document.createElement('ul')
-  for (var i of lyric) {
-    const li = document.createElement('li')
-    for (var j of i.lyric) {
-      const span = document.createElement('span')
+  const ul = document.createElement('ul')
+  const fragment = document.createDocumentFragment()
 
-      span.innerText = j
+  for (const line of lyric) {
+    const li = document.createElement('li')
+    for (const word of line.words) {
+      const span = document.createElement('span')
+      span.innerText = word.text
       li.append(span)
     }
-    Ul.append(li)
+    fragment.append(li)
   }
 
-  body.append(Ul)
+  ul.append(fragment)
+  body.append(ul)
 }

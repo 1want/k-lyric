@@ -1,43 +1,40 @@
-const reg = /\[(.+)\]/g
-const reg1 = /\((.+?)\)/gi
-const reg2 = /[\u4e00-\u9fa5]+/g
+const lineRegex = /\[(\d+),(\d+)\](.*)/
 
-function analyzeLyrics(lyric) {
-  const lrcArr = []
-  const times = []
-  const lyrics = lyric.split('\n')
-  for (var i = 0; i < lyrics.length; i++) {
-    var timeRegExpArr = lyrics[i].match(reg)
-    const content = lyrics[i].replace(timeRegExpArr, '')
-    const lyric = content.match(reg2)
-    const time1 = content.match(reg1)
-    if (content) {
-      lrcArr.push({
-        time: timeRegExpArr[0],
-        lyric,
-        time1
+function parseLyric(lyric) {
+  const lines = lyric.split('\n')
+  const parsedLines = []
+
+  for (const line of lines) {
+    const match = line.match(lineRegex)
+    if (!match) continue
+
+    const startTime = parseInt(match[1], 10)
+    const duration = parseInt(match[2], 10)
+    const content = match[3]
+
+    const words = []
+    let wordTime = 0
+    const wordMatches = content.matchAll(/\((\d+),(\d+)\)(.)/g)
+
+    for (const wordMatch of wordMatches) {
+      words.push({
+        text: wordMatch[3],
+        startTime: wordTime,
+        duration: parseInt(wordMatch[2], 10)
+      })
+      wordTime += parseInt(wordMatch[2], 10)
+    }
+
+    if (words.length > 0) {
+      parsedLines.push({
+        startTime,
+        duration,
+        endTime: startTime + duration,
+        words
       })
     }
   }
-
-  let index = 0
-  for (var i of lrcArr) {
-    let arr = []
-    // console.log(i.time1)
-    for (var j of i.time1) {
-      arr.push(j.slice(3, -1))
-      lrcArr[index]['time2'] = arr
-      delete lrcArr[index].time1
-    }
-    index++
-  }
-
-  return lrcArr
-}
-
-function parseLyric(lyric, type) {
-  return analyzeLyrics(lyric)
-  console.log(lyrics)
+  return parsedLines
 }
 
 export default parseLyric
